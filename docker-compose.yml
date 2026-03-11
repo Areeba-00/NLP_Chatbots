@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  # ── Flask Backend ──────────────────────────────────────────────
+  backend:
+    build: ./backend
+    container_name: studybot-backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app # live reload — code changes reflect instantly
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+    networks:
+      - studybot-network
+    restart: unless-stopped
+
+  # ── React Frontend ─────────────────────────────────────────────
+  frontend:
+    build: ./frontend
+    container_name: studybot-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app # live reload — code changes reflect instantly
+      - /app/node_modules # keep node_modules inside container
+    depends_on:
+      - backend # wait for backend to start first
+    networks:
+      - studybot-network
+    restart: unless-stopped
+
+# ── Shared Network ─────────────────────────────────────────────
+networks:
+  studybot-network:
+    driver: bridge
