@@ -1,0 +1,6 @@
+echo "venv/
+__pycache__/
+*.pyc
+node_modules/
+.env
+*.tar.gz" > .gitignore
